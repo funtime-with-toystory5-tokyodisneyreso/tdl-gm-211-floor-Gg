@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#3daadf">
+<title>トイフレンズスタンプラリー | プラチナマップ</title>
+<style>
+  body { 
+    margin: 0; 
+    background-color: #fcfcfc; 
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; 
+    color: #073963; 
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: 90px;
+  }
+  .stamprallyrewarddetail__header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 84px;
+    padding: 0px 20px;
+  }
+  .stamprallyrewarddetail__headertitle {
+    line-height: 20px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  .stamprallyrewarddetail__listtitle {
+    margin-top: 20px;
+    padding: 0px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+  
+  .stamprallyrewarddetail__rewardpoints {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .stamprallyrewardpoint__card {
+    background-color: rgb(255, 255, 255);
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 7px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .stamprallyrewardpoint__banner img {
+    width: 100%;
+    vertical-align: bottom;
+    object-fit: cover;
+  }
+  
+  .stamprallyrewardpoint__body {
+    padding: 20px 20px 24px;
+    flex: 1 1 0%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .stamprallyrewardpoint__title {
+    margin-top: 16px;
+    font-size: 17px;
+    font-weight: bold;
+  }
+  
+  .stamprallyrewardpoint__description {
+    margin-top: 16px;
+    font-size: 15px;
+    line-height: 1.5;
+    white-space: pre-line;
+    flex: 1 1 0%;
+  }
+  
+  .stamprallyrewardpoint__usage {
+    margin-top: 12px;
+    font-size: 14px;
+    line-height: 1.2;
+    color: #333;
+  }
+  
+  .stamprallyrewardpoint__buttons {
+    width: 100%;
+    padding: 0px 20px;
+    text-align: center;
+    box-sizing: border-box;
+  }
+  
+  .stamprallyrewardpoint__button {
+    width: 100%;
+    height: 44px;
+    padding: 0px 20px;
+    border-radius: 3px;
+    font-size: 15px;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-sizing: border-box;
+    background-color: rgb(61, 170, 223);
+    color: rgb(255, 255, 255);
+    transition: opacity 0.2s;
+  }
+  
+  .stamprallyrewardpoint__button.-disable {
+    background-color: rgb(165, 187, 192);
+    color: rgb(255, 255, 255);
+    cursor: default;
+  }
+  
+  .stamprallyrewardpoint__footer {
+    padding: 0px 20px;
+    margin-top: 20px;
+    margin-bottom: 24px;
+    text-align: center;
+    white-space: pre-wrap;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  /* .-used state */
+  .stamprallyrewardpoint__card.-used .stamprallyrewardpoint__footer {
+    display: none;
+  }
+  
+  .stamprallyrewardpoint__card.-used .stamprallyrewardpoint__buttons {
+    display: none;
+  }
+  
+  .stamprallyrewardpoint__card.-used .stamprallyrewardpoint__usage {
+    margin-top: 20px;
+    background-color: rgb(245, 245, 245);
+    border-radius: 4px;
+    padding: 10px;
+    line-height: 1.25;
+    font-size: 14px;
+    white-space: pre-line;
+    text-align: center;
+    color: #073963;
+    display: block !important;
+  }
+  
+  .stamprallyrewardpoint__footer .-notice {
+    font-size: 12px;
+    line-height: 1.2;
+    color: #e25950;
+    font-weight: bold;
+  }
+  
+  .stamprallyrewardpoint__footer .-notice.-description {
+    text-align: left;
+    display: flex;
+    justify-content: center;
+  }
+  
+  /* Confirmation Dialog */
+  .alertdialog {
+    position: fixed;
+    inset: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 99999;
+    display: none;
+  }
+  
+  .alertdialog__backdrop {
+    position: absolute;
+    inset: 0px;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: saturate(90%) blur(3px);
+  }
+  
+  .alertdialog__card {
+    pointer-events: all;
+    width: 100%;
+    margin: 0px auto;
+    border-radius: 3px;
+    background-color: rgb(255, 255, 255);
+    padding: 20px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 7px;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    max-width: 320px;
+    box-sizing: border-box;
+  }
+  
+  .alertdialog__title {
+    margin-bottom: 20px;
+    font-weight: 600;
+    text-align: center;
+    white-space: pre-wrap;
+    font-size: 17px;
+  }
+  
+  .alertdialog__message {
+    white-space: pre-wrap;
+    text-align: center;
+    font-size: 15px;
+    line-height: 1.5;
+    color: #333;
+  }
+  
+  .alertdialog__buttons {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .alertdialog__buttons .btn {
+    width: 100%;
+    height: 44px;
+    padding: 0;
+    border-radius: 22px;
+    font-size: 15px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: none;
+  }
+  
+  .alertdialog__buttons .btn-confirm {
+    background-color: rgb(61, 170, 223);
+    color: white;
+  }
+  
+  .alertdialog__buttons .btn-cancel {
+    background-color: #e9e9e9;
+    color: #333;
+  }
+  
+  /* Success Modal (pccd) */
+  .pccd {
+    position: fixed;
+    inset: 0px;
+    z-index: 20000;
+    display: none;
+  }
+  
+  .pccd__backdrop {
+    position: absolute;
+    inset: 0px;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: saturate(90%) blur(3px);
+  }
+  
+  .pccd__card {
+    position: absolute;
+    top: 50%;
+    left: 0px;
+    right: 0px;
+    transform: translateY(-50%);
+    margin: 0px 16px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 3px;
+    padding-bottom: 32px;
+    max-width: 360px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .toystory5closebutton {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .toystory5closebutton svg {
+    width: 16px;
+    height: 16px;
+    stroke: #3daadf;
+    stroke-width: 3;
+  }
+  
+  .pccd__title {
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    margin: 16px 0px;
+  }
+  
+  .pccd__cardimage {
+    padding: 0 16px;
+  }
+  
+  .pccd__cardimage img {
+    width: 100%;
+    display: block;
+    border-radius: 3px;
+  }
+  
+  .pccd__message {
+    margin-top: 32px;
+    padding: 0px 20px;
+    font-size: 15px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    text-align: center;
+    font-weight: bold;
+  }
+  
+  .pccd__usedat {
+    margin: 20px 32px 0px;
+    padding: 8px;
+    font-size: 13px;
+    line-height: 1;
+    background-color: rgb(245, 245, 245);
+    text-align: center;
+    display: none;
+  }
+  
+  .pccd__usedatlabel {
+    font-weight: 600;
+  }
+  
+  .pccd__usedatlabel::after {
+    content: ":";
+  }
+  
+  .pccd__usedattext {
+    margin-left: 4px;
+  }
+  
+  /* Bottom Menubar */
+  .toystory5menubar {
+    pointer-events: auto;
+    background-color: rgba(255, 255, 255, 0.86);
+    backdrop-filter: saturate(180%) blur(30px);
+    box-shadow: rgba(0, 0, 0, 0.2) 0px -1px 7px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10000;
+  }
+  .toystory5menubar__commandbar {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    position: relative;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .toystory5menubar__command {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    position: relative;
+    flex: 1 1 0%;
+    min-width: 0px;
+    cursor: pointer;
+    color: rgb(119, 119, 119);
+    padding: 16px 0px;
+  }
+  .toystory5menubar__command.-selected .toystory5menubar__name {
+    color: #3daadf;
+    font-weight: 700;
+  }
+  .toystory5menubar__iconimg {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .toystory5menubar__iconimg img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .toystory5menubar__name {
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-top: 4px;
+    text-align: center;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .toystory5menubar__selected {
+    position: absolute;
+    top: 0px;
+    height: 2px;
+    border-radius: 2px;
+    background-color: #3daadf;
+    transition: left 0.25s;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="stamprallyrewarddetail__header">
+  <div class="stamprallyrewarddetail__headertitle">プレゼント</div>
+</div>
+<div class="stamprallyrewarddetail__listtitle">プレゼントを確認する</div>
+
+<div class="stamprallyrewarddetail__rewardpoints">
+  <!-- Card 1 -->
+  <div class="stamprallyrewardpoint__card -available" id="card1">
+    <div class="stamprallyrewardpoint__banner">
+      <img src="https://cdn.platinumaps.jp/maps/1344/rewardpointbanner-1/10031.png?v=639184658553598354" alt="">
+    </div>
+    <div class="stamprallyrewardpoint__body">
+      <div class="stamprallyrewardpoint__title bold">オリジナルシール</div>
+      <div class="stamprallyrewardpoint__description">【獲得条件】
+①～⑥のスタンプをすべて集める
+
+【受け取り方法・場所】
+条件を達成すると青色で表示される「キャストからプレゼントを受け取る」ボタンをウエスタンランドまたはトゥモローランドのキャストに見せてください。</div>
+      <div class="stamprallyrewardpoint__usage" id="usage1" style="display: none;"></div>
+    </div>
+    <div class="stamprallyrewardpoint__buttons">
+      <div class="stamprallyrewardpoint__button" id="btn1" onclick="openModal(1)">キャストからプレゼントを受け取る</div>
+    </div>
+    <div class="stamprallyrewardpoint__footer" id="notice1">
+      <div class="-notice -description">【注意】青いボタンは押さずにキャストに見せてください。</div>
+    </div>
+  </div>
+
+  <!-- Card 2 -->
+  <div class="stamprallyrewardpoint__card -available" id="card2">
+    <div class="stamprallyrewardpoint__banner">
+      <img src="https://cdn.platinumaps.jp/maps/1344/rewardpointbanner-2/10032.webp?v=639184658553598354" alt="">
+    </div>
+    <div class="stamprallyrewardpoint__body">
+      <div class="stamprallyrewardpoint__title bold">『ディズニー・ロルカナ・トレーディングカードゲーム』東京ディズニーランド®オリジナル仕様の ≪バズ・ライトイヤー -スペース・レンジャー-≫</div>
+      <div class="stamprallyrewardpoint__description">【獲得条件】
+①～⑥のスタンプをすべて集め、さらに⑦のスペシャルミッションをクリアする
+
+【受け取り方法・場所】
+条件を達成すると青色で表示される「キャストからプレゼントを受け取る」ボタンをマップ上の「ロルカナカード引き換え場所」のキャストに見せてください。</div>
+      <div class="stamprallyrewardpoint__usage" id="usage2" style="display: none;"></div>
+    </div>
+    <div class="stamprallyrewardpoint__buttons">
+      <div class="stamprallyrewardpoint__button" id="btn2" onclick="openModal(2)">キャストからプレゼントを受け取る</div>
+    </div>
+    <div class="stamprallyrewardpoint__footer" id="notice2">
+      <div class="-notice -description">【注意】青いボタンは押さずにキャストに見せてください。</div>
+    </div>
+  </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div class="alertdialog" id="modal">
+  <div class="alertdialog__backdrop" onclick="closeModal()"></div>
+  <div class="alertdialog__card">
+    <div class="alertdialog__title">プレゼントを受け取りますか？</div>
+    <div class="alertdialog__message">この操作は取り消せません。<br>必ずキャストの目の前で操作してください。</div>
+    <div class="alertdialog__buttons">
+      <div class="btn btn-confirm" onclick="confirmReceive()">受け取る</div>
+      <div class="btn btn-cancel" onclick="closeModal()">キャンセル</div>
+    </div>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div class="pccd" id="success-modal">
+  <div class="pccd__backdrop" onclick="closeSuccessModal()"></div>
+  <div class="pccd__card">
+    <div class="toystory5closebutton" onclick="closeSuccessModal()">
+      <svg viewBox="0 0 12 12"><line x1="1" y1="11" x2="11" y2="1"></line><line x1="1" y1="1" x2="11" y2="11"></line></svg>
+    </div>
+    <div class="pccd__title" id="success-title">オリジナルシール</div>
+    <div class="pccd__cardimage">
+      <img id="success-image" src="" alt="">
+    </div>
+    <div class="pccd__message" id="success-message">オリジナルシールは受け取り済みです。</div>
+  </div>
+</div>
+
+<script>
+  let currentId = null;
+  
+  const rewards = {
+    1: {
+      title: 'オリジナルシール',
+      image: 'https://cdn.platinumaps.jp/maps/1344/rewardpointbanner-1/10031.png?v=639184658553598354',
+      message: 'オリジナルシールは\n受け取り済みです。'
+    },
+    2: {
+      title: '『ディズニー・ロルカナ・トレーディングカードゲーム』\n東京ディズニーランド®オリジナル仕様の\n≪バズ・ライトイヤー -スペース・レンジャー-≫',
+      image: 'https://cdn.platinumaps.jp/maps/1344/rewardpointbanner-2/10032.webp?v=639184658553598354',
+      message: '東京ディズニーランド®オリジナル仕様の\nディズニー・ロルカナカードは受け取り済みです。'
+    }
+  };
+
+  function openModal(id) {
+    const card = document.getElementById('card' + id);
+    if(card.classList.contains('-used')) {
+      showSuccessModal(id);
+      return;
+    }
+    currentId = id;
+    document.getElementById('modal').style.display = 'block';
+  }
+
+  function closeModal() {
+    document.getElementById('modal').style.display = 'none';
+    currentId = null;
+  }
+
+  function getFormattedDate() {
+    const d = new Date();
+    const days = ['日', '月', '火', '水', '木', '金', '土'];
+    const min = String(d.getMinutes()).padStart(2, '0');
+    return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日(${days[d.getDay()]}) ${d.getHours()}:${min}`;
+  }
+
+  function confirmReceive() {
+    if(currentId) {
+      const card = document.getElementById('card' + currentId);
+      const btn = document.getElementById('btn' + currentId);
+      const usage = document.getElementById('usage' + currentId);
+      
+      const timeStr = getFormattedDate() + ' に受け取り済み';
+      usage.innerText = timeStr;
+      usage.style.display = 'block';
+      
+      btn.innerText = '受け取り済み';
+      btn.classList.add('-disable');
+      
+      card.classList.remove('-available');
+      card.classList.add('-used');
+
+      rewards[currentId].usedTime = getFormattedDate();
+
+      showSuccessModal(currentId);
+    }
+    closeModal();
+  }
+
+  function showSuccessModal(id) {
+    const reward = rewards[id];
+    document.getElementById('success-title').innerText = reward.title;
+    document.getElementById('success-image').src = reward.image;
+    document.getElementById('success-message').innerText = reward.message;
+    
+    document.getElementById('success-modal').style.display = 'block';
+  }
+
+  function closeSuccessModal() {
+    document.getElementById('success-modal').style.display = 'none';
+  }
+</script>
+
+<div class="srcommandcontroller__commandbar">
+  <div class="toystory5menubar">
+    <div class="toystory5menubar__commandbar">
+      <div class="toystory5menubar__command">
+        <div class="toystory5menubar__iconimg"><img src="https://funtime-with-toystory5.tokyodisneyresort.jp/map/images/customize/toystory5/tdl/menubar/home_off.webp" alt="ホーム"></div>
+        <div class="toystory5menubar__name">ホーム</div>
+      </div>
+      <div class="toystory5menubar__command">
+        <div class="toystory5menubar__iconimg"><img src="https://funtime-with-toystory5.tokyodisneyresort.jp/map/images/customize/toystory5/tdl/menubar/map_off.webp" alt="マップ"></div>
+        <div class="toystory5menubar__name">マップ</div>
+      </div>
+      <div class="toystory5menubar__command -selected">
+        <div class="toystory5menubar__iconimg"><img src="https://funtime-with-toystory5.tokyodisneyresort.jp/map/images/customize/toystory5/tdl/menubar/present_on.webp" alt="プレゼント"></div>
+        <div class="toystory5menubar__name">プレゼント</div>
+      </div>
+      <div class="toystory5menubar__command">
+        <div class="toystory5menubar__iconimg"><img src="https://funtime-with-toystory5.tokyodisneyresort.jp/map/images/customize/toystory5/tdl/menubar/howtoplay_off.webp" alt="あそびかた"></div>
+        <div class="toystory5menubar__name">あそびかた</div>
+      </div>
+      <div class="toystory5menubar__selected" style="width: 25%; left: 50%;"></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
