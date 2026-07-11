@@ -182,9 +182,9 @@
     pointer-events: all;
     width: 100%;
     margin: 0px auto;
-    border-radius: 3px;
+    border-radius: 4px;
     background-color: rgb(255, 255, 255);
-    padding: 20px;
+    padding: 24px 20px;
     box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 7px;
     position: relative;
     top: 50%;
@@ -193,24 +193,24 @@
     box-sizing: border-box;
   }
   
-  .alertdialog__title {
-    margin-bottom: 20px;
-    font-weight: 600;
-    text-align: center;
-    white-space: pre-wrap;
-    font-size: 17px;
+  .alertdialog__message-main {
+    font-size: 15px;
+    font-weight: bold;
+    color: #073963;
+    line-height: 1.5;
+    text-align: left;
   }
   
-  .alertdialog__message {
-    white-space: pre-wrap;
-    text-align: center;
-    font-size: 15px;
+  .alertdialog__warning {
+    margin-top: 16px;
+    font-size: 13px;
     line-height: 1.5;
-    color: #333;
+    color: #b7322d;
+    text-align: left;
   }
   
   .alertdialog__buttons {
-    margin-top: 32px;
+    margin-top: 24px;
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -220,7 +220,7 @@
     width: 100%;
     height: 44px;
     padding: 0;
-    border-radius: 22px;
+    border-radius: 3px;
     font-size: 15px;
     font-weight: bold;
     display: flex;
@@ -228,6 +228,7 @@
     align-items: center;
     cursor: pointer;
     border: none;
+    box-sizing: border-box;
   }
   
   .alertdialog__buttons .btn-confirm {
@@ -236,8 +237,9 @@
   }
   
   .alertdialog__buttons .btn-cancel {
-    background-color: #e9e9e9;
-    color: #333;
+    background-color: #ffffff;
+    color: rgb(61, 170, 223);
+    border: 1px solid rgb(61, 170, 223);
   }
   
   /* Success Modal (pccd) */
@@ -464,10 +466,10 @@
 <div class="alertdialog" id="modal">
   <div class="alertdialog__backdrop" onclick="closeModal()"></div>
   <div class="alertdialog__card">
-    <div class="alertdialog__title">プレゼントを受け取りますか？</div>
-    <div class="alertdialog__message">この操作は取り消せません。<br>必ずキャストの目の前で操作してください。</div>
+    <div class="alertdialog__message-main" id="modal-main-message">オリジナルシールを受け取ります。この画面をキャストに見せてください。</div>
+    <div class="alertdialog__warning">※注意！ キャストが確認する前に押すとプレゼントをお渡しできないことがあります。</div>
     <div class="alertdialog__buttons">
-      <div class="btn btn-confirm" onclick="confirmReceive()">受け取る</div>
+      <div class="btn btn-confirm" onclick="confirmReceive()">キャストが確認しました</div>
       <div class="btn btn-cancel" onclick="closeModal()">キャンセル</div>
     </div>
   </div>
@@ -494,11 +496,13 @@
   const rewards = {
     1: {
       title: 'オリジナルシール',
+      modalMessage: 'オリジナルシールを受け取ります。この画面をキャストに見せてください。',
       image: 'https://cdn.platinumaps.jp/maps/1344/rewardpointbanner-1/10031.png?v=639184658553598354',
       message: 'オリジナルシールは\n受け取り済みです。'
     },
     2: {
       title: '『ディズニー・ロルカナ・トレーディングカードゲーム』\n東京ディズニーランド®オリジナル仕様の\n≪バズ・ライトイヤー -スペース・レンジャー-≫',
+      modalMessage: 'プレゼントを受け取ります。この画面をキャストに見せてください。',
       image: 'https://cdn.platinumaps.jp/maps/1344/rewardpointbanner-2/10032.webp?v=639184658553598354',
       message: '東京ディズニーランド®オリジナル仕様の\nディズニー・ロルカナカードは受け取り済みです。'
     }
@@ -511,6 +515,9 @@
       return;
     }
     currentId = id;
+    
+    // ダイアログの文言を動的に変更
+    document.getElementById('modal-main-message').innerText = rewards[id].modalMessage;
     document.getElementById('modal').style.display = 'block';
   }
 
