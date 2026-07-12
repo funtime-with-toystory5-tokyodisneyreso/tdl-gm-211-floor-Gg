@@ -77,6 +77,14 @@
     white-space: pre-line;
     flex: 1 1 0%;
   }
+
+  /* 新しく追加した注意書きのスタイル */
+  .stamprallyrewardpoint__note {
+    margin-top: 24px;
+    font-size: 14px;
+    color: #333;
+    line-height: 1.4;
+  }
   
   .stamprallyrewardpoint__usage {
     margin-top: 12px;
@@ -119,7 +127,7 @@
     padding: 0px 20px;
     margin-top: 20px;
     margin-bottom: 24px;
-    text-align: center;
+    text-align: left;
     white-space: pre-wrap;
     display: flex;
     flex-direction: column;
@@ -150,15 +158,14 @@
   
   .stamprallyrewardpoint__footer .-notice {
     font-size: 12px;
-    line-height: 1.2;
-    color: #e25950;
-    font-weight: bold;
+    line-height: 1.4;
+    color: #333; /* 赤色(#e25950)から黒色に変更 */
+    /* font-weight: bold; を削除して通常の太さに */
   }
   
   .stamprallyrewardpoint__footer .-notice.-description {
     text-align: left;
-    display: flex;
-    justify-content: center;
+    display: block; /* flexの中央揃えを解除して左揃えに */
   }
   
   /* Confirmation Dialog */
@@ -194,7 +201,7 @@
   }
   
   .alertdialog__message-main {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: bold;
     color: #073963;
     line-height: 1.5;
@@ -205,7 +212,7 @@
     margin-top: 16px;
     font-size: 13px;
     line-height: 1.5;
-    color: #b7322d;
+    color: #d32f2f;
     text-align: left;
   }
   
@@ -429,6 +436,7 @@
 
 【受け取り方法・場所】
 条件を達成すると青色で表示される「キャストからプレゼントを受け取る」ボタンをウエスタンランドまたはトゥモローランドのキャストに見せてください。</div>
+      <div class="stamprallyrewardpoint__note">※特典の引き換えはパーク運営時間内のみ可能</div>
       <div class="stamprallyrewardpoint__usage" id="usage1" style="display: none;"></div>
     </div>
     <div class="stamprallyrewardpoint__buttons">
@@ -451,6 +459,7 @@
 
 【受け取り方法・場所】
 条件を達成すると青色で表示される「キャストからプレゼントを受け取る」ボタンをマップ上の「ロルカナカード引き換え場所」のキャストに見せてください。</div>
+      <div class="stamprallyrewardpoint__note">※特典の引き換えはパーク運営時間内のみ可能</div>
       <div class="stamprallyrewardpoint__usage" id="usage2" style="display: none;"></div>
     </div>
     <div class="stamprallyrewardpoint__buttons">
