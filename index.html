@@ -78,10 +78,10 @@
     flex: 1 1 0%;
   }
 
-  /* 修正部分：説明文と同じ文字色・太さ・左揃えに指定 */
+  /* 修正部分：文字サイズを元の大きさに戻し、色だけ指定 */
   .stamprallyrewardpoint__term {
     margin-top: 16px;
-    font-size: 15px;
+    font-size: 13px; /* 15pxから13pxに変更 */
     line-height: 1.5;
     color: #073963;
   }
@@ -156,11 +156,12 @@
     display: block !important;
   }
   
+  /* 修正部分：赤文字・太字の指定を解除して通常のグレー文字に */
   .stamprallyrewardpoint__footer .-notice {
     font-size: 12px;
     line-height: 1.2;
-    color: #e25950;
-    font-weight: bold;
+    color: #333;
+    font-weight: normal;
   }
   
   .stamprallyrewardpoint__footer .-notice.-description {
